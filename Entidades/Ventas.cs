@@ -6,7 +6,10 @@ using System.Threading.Tasks;
 
 namespace Entidades
 {
-    public class Class1
+    public class Ventas
     {
+        public Sedes Sedes { get; set; }
+        public Productos Productos { get; set; }
+        public double Valor { get; set; }
     }
 }
