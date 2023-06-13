@@ -1,0 +1,48 @@
+-- Conectate con el system
+conn system/oracle@localhost:1521/xepdb1;
+
+-- Crea el tablespace PRACTICATENMIN
+CREATE TABLESPACE datoo DATAFILE 'C:\app\valde\product\18.0.0\oradata\XE\XEPDB1\PRACTICATENMIN' SIZE 10M;
+
+-- Crea el usuario para el tablespace
+CREATE USER user_practica IDENTIFIED BY 12345 DEFAULT TABLESPACE PRACTICATENMIN TEMPORARY TABLESPACE TEMP QUOTA UNLIMITED ON PRACTICATENMIN;
+
+-- Asignar permisos para proceder a la creación de la base de datos
+GRANT DBA TO user_practica;
+
+-- Conectacte con el tablespace que has creado desde sql developer o puedes simplemente conectarte de este forma desde el cmd:
+conn user_practica/12345@localhost:1521/xepdb1;
+
+-- Una vez conectado, crear tablas (PUNTO 1 FINALIZADO)
+-- Creación de la tabla sedes
+CREATE TABLE sedes (
+    id_sede VARCHAR2(3) PRIMARY KEY,
+    nombre_sede VARCHAR2(50)
+);
+
+-- Inserción de datos en la tabla sedes
+INSERT INTO sedes (id_sede, nombre_sede) VALUES ('001', 'Sede Norte');
+INSERT INTO sedes (id_sede, nombre_sede) VALUES ('002', 'Sede Sur');
+INSERT INTO sedes (id_sede, nombre_sede) VALUES ('003', 'Sede Centro');
+
+-- Creación de la tabla productos
+CREATE TABLE productos (
+    codigo_producto VARCHAR2(4) PRIMARY KEY,
+    nombre_producto VARCHAR2(50),
+    valor NUMBER(10, 2)
+);
+
+-- Inserción de datos en la tabla productos
+INSERT INTO productos (codigo_producto, nombre_producto, valor) VALUES ('P001', 'Juego de sala', 1000000);
+INSERT INTO productos (codigo_producto, nombre_producto, valor) VALUES ('P002', 'Juego de Comedor', 1200000);
+INSERT INTO productos (codigo_producto, nombre_producto, valor) VALUES ('P003', 'Nevera', 800000);
+INSERT INTO productos (codigo_producto, nombre_producto, valor) VALUES ('P004', 'Estufa', 500000);
+
+-- Creación de la tabla ventas
+CREATE TABLE ventas (
+    codigo_sede VARCHAR2(3),
+    codigo_producto VARCHAR2(4),
+    valor NUMBER(10, 2),
+    FOREIGN KEY (codigo_sede) REFERENCES sedes(id_sede),
+    FOREIGN KEY (codigo_producto) REFERENCES productos(codigo_producto)
+);
