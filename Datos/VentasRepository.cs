@@ -34,45 +34,58 @@ namespace Datos
             return "Venta insertada correctamente";
         }
 
+        // cargar ventas sin validaciones
         public void CargarVentas(string rutaArchivo)
         {
             List<Ventas> ventas = LeerArchivoVentas(rutaArchivo);
 
-            // Obtener la lista de productos existentes en la base de datos
-            List<Productos> productosBD = new ProductosRepository(this.connection.ConnectionString).GetAll();
-
-            // Verificar que la sede seleccionada coincida con la sede encontrada en el archivo
-            //if (!ventas.Any(v => v.Sedes.Id_sede == idSede))
-            //{
-            //    throw new Exception("La sede seleccionada no coincide con la sede encontrada en el archivo.");
-            //}
-
-            // Validar y registrar nuevos productos en la base de datos
-            ProductosRepository productosRepository = new ProductosRepository(this.connection.ConnectionString);
             foreach (var venta in ventas)
             {
-                if (!productosBD.Any(p => p.Codigo_producto == venta.Productos.Codigo_producto))
-                {
-                    // Nuevo producto encontrado, registrarlo en la base de datos
-                    Productos nuevoProducto = new Productos
-                    {
-                        Codigo_producto = venta.Productos.Codigo_producto,
-                        Nombre_producto = venta.Productos.Nombre_producto,
-                        Valor = venta.Productos.Valor
-                    };
-                    productosRepository.InsertarProductos(nuevoProducto);
-
-                    productosBD.Add(nuevoProducto);
-                }
-            }
-
-            List<Ventas> ventasValidas = ventas.Where(v => productosBD.Any(p => p.Codigo_producto == v.Productos.Codigo_producto && p.Valor == v.Valor)).ToList();
-
-            foreach (var ventaValida in ventasValidas)
-            {
-                InsertarVentas(ventaValida);
+                InsertarVentas(venta);
             }
         }
+
+
+
+        //public void CargarVentas(string rutaArchivo)
+        //{
+        //    List<Ventas> ventas = LeerArchivoVentas(rutaArchivo);
+
+        //    // Obtener la lista de productos existentes en la base de datos
+        //    List<Productos> productosBD = new ProductosRepository(this.connection.ConnectionString).GetAll();
+
+        //    // Verificar que la sede seleccionada coincida con la sede encontrada en el archivo
+        //    //if (!ventas.Any(v => v.Sedes.Id_sede == idSede))
+        //    //{
+        //    //    throw new Exception("La sede seleccionada no coincide con la sede encontrada en el archivo.");
+        //    //}
+
+        //    // Validar y registrar nuevos productos en la base de datos
+        //    ProductosRepository productosRepository = new ProductosRepository(this.connection.ConnectionString);
+        //    foreach (var venta in ventas)
+        //    {
+        //        if (!productosBD.Any(p => p.Codigo_producto == venta.Productos.Codigo_producto))
+        //        {
+        //            // Nuevo producto encontrado, registrarlo en la base de datos
+        //            Productos nuevoProducto = new Productos
+        //            {
+        //                Codigo_producto = venta.Productos.Codigo_producto,
+        //                Nombre_producto = venta.Productos.Nombre_producto,
+        //                Valor = venta.Productos.Valor
+        //            };
+        //            productosRepository.InsertarProductos(nuevoProducto);
+
+        //            productosBD.Add(nuevoProducto);
+        //        }
+        //    }
+
+        //    List<Ventas> ventasValidas = ventas.Where(v => productosBD.Any(p => p.Codigo_producto == v.Productos.Codigo_producto && p.Valor == v.Valor)).ToList();
+
+        //    foreach (var ventaValida in ventasValidas)
+        //    {
+        //        InsertarVentas(ventaValida);
+        //    }
+        //}
 
         //private List<Ventas> LeerArchivoVentas(string rutaArchivo)
         //{

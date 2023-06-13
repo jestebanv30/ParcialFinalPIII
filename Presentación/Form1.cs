@@ -41,10 +41,7 @@ namespace Presentación
                     string rutaArchivo = openFileDialog.FileName;
                     // Obtener la sede seleccionada en el ComboBox
                     //string idSede = cbSedes.SelectedValue.ToString();
-                    // Imprimir la ruta del archivo en la consola
-                    Console.WriteLine("Ruta del archivo seleccionado: " + rutaArchivo);
 
-                    // O mostrar la ruta en un MessageBox
                     MessageBox.Show("Ruta del archivo seleccionado: " + rutaArchivo);
                     try
                     {
