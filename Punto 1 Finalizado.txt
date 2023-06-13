@@ -46,3 +46,30 @@ CREATE TABLE ventas (
     FOREIGN KEY (codigo_sede) REFERENCES sedes(id_sede),
     FOREIGN KEY (codigo_producto) REFERENCES productos(codigo_producto)
 );
+
+-- Procedimiento para insertar ventas (Es llamado en el programa)
+CREATE OR REPLACE PROCEDURE InsertarVenta(
+    p_codigo_sede IN VARCHAR2,
+    p_codigo_producto IN VARCHAR2,
+    p_valor IN NUMBER
+)
+AS
+BEGIN
+    INSERT INTO ventas (codigo_sede, codigo_producto, valor)
+    VALUES (p_codigo_sede, p_codigo_producto, p_valor);
+    COMMIT;
+END;
+
+-- Procedimiento para insertar productos
+CREATE OR REPLACE PROCEDURE InsertarProducto(
+    p_codigoProducto IN VARCHAR2,
+    p_nombreProducto IN VARCHAR2,
+    p_valor IN NUMBER
+)
+AS
+BEGIN
+    INSERT INTO productos (codigo_producto, nombre_producto, valor)
+    VALUES (p_codigoProducto, p_nombreProducto, p_valor);
+    
+    COMMIT;
+END;
