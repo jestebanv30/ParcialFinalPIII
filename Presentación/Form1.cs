@@ -29,48 +29,85 @@ namespace Presentación
             cbSedes.DataSource = sedes;
         }
 
-        private void CargarArchivo()
+        private void CargarGrilla()
         {
-            using (OpenFileDialog openFileDialog = new OpenFileDialog())
+            dataGridView1.DataSource = VentaService.GetAll();
+        }
+
+        private void ValidacionesyCargarArchivo()
+        {
+            if (rbValidar.Checked == true)
             {
-                openFileDialog.Filter = "Archivos de texto (*.txt)|*.txt|Todos los archivos (*.*)|*.*";
-                openFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-
-                if (openFileDialog.ShowDialog() == DialogResult.OK)
+                if (cbSedes.SelectedItem == null)
                 {
-                    string rutaArchivo = openFileDialog.FileName;
-                    // Obtener la sede seleccionada en el ComboBox
-                    //string idSede = cbSedes.SelectedValue.ToString();
+                    MessageBox.Show("Seleccione una sede para validar", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+                using (OpenFileDialog openFileDialog = new OpenFileDialog())
+                {
+                    openFileDialog.Filter = "Archivos de texto (*.txt)|*.txt|Todos los archivos (*.*)|*.*";
+                    openFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
 
-                    MessageBox.Show("Ruta del archivo seleccionado: " + rutaArchivo);
-                    try
+                    if (openFileDialog.ShowDialog() == DialogResult.OK)
                     {
-                        //VentaService.CargarVentas(rutaArchivo, idSedeSeleccionada);
-                        VentaService.CargarVentas(rutaArchivo);
+                        string rutaArchivo = openFileDialog.FileName;
 
-                        MessageBox.Show("Las ventas se han cargado correctamente.");
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show($"Error al cargar las ventas: {ex.Message}");
+                        try
+                        {
+                            string idSedeSeleccionada = cbSedes.SelectedValue.ToString();
+                            VentaService.CargarVentasValidando(rutaArchivo, idSedeSeleccionada);
+
+                            MessageBox.Show("Las ventas se han cargado correctamente.");
+                        }
+                        catch (Exception ex)
+                        {
+                            MessageBox.Show($"Error al cargar las ventas: {ex.Message}");
+                        }
                     }
                 }
+            }
+            else if (rbSinvalidar.Checked == true)
+            {
+                using (OpenFileDialog openFileDialog = new OpenFileDialog())
+                {
+                    openFileDialog.Filter = "Archivos de texto (*.txt)|*.txt|Todos los archivos (*.*)|*.*";
+                    openFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+
+                    if (openFileDialog.ShowDialog() == DialogResult.OK)
+                    {
+                        string rutaArchivo = openFileDialog.FileName;
+
+                        try
+                        {
+                            VentaService.CargarVentas(rutaArchivo);
+
+                            MessageBox.Show("Las ventas se han cargado correctamente.");
+                        }
+                        catch (Exception ex)
+                        {
+                            MessageBox.Show($"Error al cargar las ventas: {ex.Message}");
+                        }
+                    }
+                }
+            }
+            else
+            {
+                MessageBox.Show("Seleccione una opción de validación", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
         private void btnCargar_Click(object sender, EventArgs e)
         {
-            CargarArchivo();
+            ValidacionesyCargarArchivo();
         }
 
         private void Form1_Load(object sender, EventArgs e)
         {
             CargarSedes();
+            //CargarGrilla();
         }
 
-        string idSedeSeleccionada;
         private void cbSedes_SelectedIndexChanged(object sender, EventArgs e)
         {
-           idSedeSeleccionada = cbSedes.SelectedValue.ToString();
         }
     }
 }

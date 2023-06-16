@@ -15,7 +15,33 @@ namespace Datos
         public VentasRepository(string connectionString) : base(connectionString)
         {
         }
+        public List<Ventas> GetAll()
+        {
+            List<Ventas> ventas = new List<Ventas>();
 
+            var comando = connection.CreateCommand();
+            comando.CommandText = "SELECT * FROM ventas";
+            Open();
+            OracleDataReader lector = comando.ExecuteReader();
+            while (lector.Read())
+            {
+                ventas.Add(MapperToVentas(lector));
+            }
+            Close();
+            return ventas;
+        }
+
+        private Ventas MapperToVentas(OracleDataReader oracleDataReader)
+        {
+            if (!oracleDataReader.HasRows) return null;
+
+            Ventas ventas = new Ventas();
+            ventas.Sedes.Id_sede = oracleDataReader.GetString(0);
+            ventas.Productos.Codigo_producto = oracleDataReader.GetString(1);
+            ventas.Valor = oracleDataReader.GetDouble(2);
+
+            return ventas;
+        }
         public string InsertarVentas(Ventas ventas)
         {
             using (var comando = connection.CreateCommand())
@@ -34,29 +60,35 @@ namespace Datos
             return "Venta insertada correctamente";
         }
 
-        // cargar ventas sin validaciones (Funcional)
-        //public void CargarVentas(string rutaArchivo)
-        //{
-        //    List<Ventas> ventas = LeerArchivoVentas(rutaArchivo);
+        public void CargarVentasValidando(string rutaArchivo, string idSede)
+        {
+            List<Ventas> ventas = LeerArchivoVentas(rutaArchivo);
 
-        //    foreach (var venta in ventas)
-        //    {
-        //        InsertarVentas(venta);
-        //    }
-        //}
+            List<Productos> productos = new ProductosRepository(this.connection.ConnectionString).GetAll();
 
-        // Cargar ventas validando la que está seleccionada en el combobox, es decir, se carga solo las de sede norte si se selecciona
-        //public void CargarVentas(string rutaArchivo, string idSedeDeseada)
-        //{
-        //    List<Ventas> ventas = LeerArchivoVentas(rutaArchivo);
+            ProductosRepository productosRepository = new ProductosRepository(this.connection.ConnectionString);
+            foreach (var venta in ventas)
+            {
+                if (!productos.Any(p => p.Codigo_producto == venta.Productos.Codigo_producto))
+                {
+                    Productos nuevoProducto = new Productos
+                    {
+                        Codigo_producto = venta.Productos.Codigo_producto,
+                        Valor = venta.Valor
+                    };
+                    productosRepository.InsertarProductos(nuevoProducto);
 
-        //    List<Ventas> ventasSedeDeseada = ventas.Where(v => v.Sedes.Id_sede == idSedeDeseada).ToList(); 
+                    productos.Add(nuevoProducto);
+                }
+            }
 
-        //    foreach (var venta in ventasSedeDeseada)
-        //    {
-        //        InsertarVentas(venta);
-        //    }
-        //}
+            List<Ventas> ventasSedeDeseada = ventas.Where(v => v.Sedes.Id_sede == idSede).ToList();
+
+            foreach (var venta in ventasSedeDeseada)
+            {
+                InsertarVentas(venta);
+            }
+        }
 
         public void CargarVentas(string rutaArchivo)
         {

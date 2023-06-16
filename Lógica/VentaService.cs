@@ -17,14 +17,16 @@ namespace Lógica
             ventasRepository = new VentasRepository(conexion);
         }
 
-        public string Insert(Ventas ventas)
+        public List<Ventas> GetAll()
         {
-            return ventasRepository.InsertarVentas(ventas);
+            return ventasRepository.GetAll();
         }
-
-        public void CargarVentas(string rutaArchivo) //string idSedeDeseada
+        public void CargarVentasValidando(string rutaArchivo, string idSede) 
         {
-            //ventasRepository.CargarVentas(rutaArchivo, idSedeDeseada);
+            ventasRepository.CargarVentasValidando(rutaArchivo, idSede);
+        }
+        public void CargarVentas(string rutaArchivo) 
+        {
             ventasRepository.CargarVentas(rutaArchivo);
         }
     }
