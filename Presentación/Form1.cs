@@ -45,15 +45,13 @@ namespace Presentación
                     MessageBox.Show("Ruta del archivo seleccionado: " + rutaArchivo);
                     try
                     {
-                        // Cargar las ventas en la base de datos
+                        //VentaService.CargarVentas(rutaArchivo, idSedeSeleccionada);
                         VentaService.CargarVentas(rutaArchivo);
 
-                        // Mostrar mensaje de éxito
                         MessageBox.Show("Las ventas se han cargado correctamente.");
                     }
                     catch (Exception ex)
                     {
-                        // Mostrar mensaje de error
                         MessageBox.Show($"Error al cargar las ventas: {ex.Message}");
                     }
                 }
@@ -67,6 +65,12 @@ namespace Presentación
         private void Form1_Load(object sender, EventArgs e)
         {
             CargarSedes();
+        }
+
+        string idSedeSeleccionada;
+        private void cbSedes_SelectedIndexChanged(object sender, EventArgs e)
+        {
+           idSedeSeleccionada = cbSedes.SelectedValue.ToString();
         }
     }
 }

@@ -43,6 +43,7 @@
             this.cbSedes.Name = "cbSedes";
             this.cbSedes.Size = new System.Drawing.Size(121, 21);
             this.cbSedes.TabIndex = 1;
+            this.cbSedes.SelectedIndexChanged += new System.EventHandler(this.cbSedes_SelectedIndexChanged);
             // 
             // label1
             // 

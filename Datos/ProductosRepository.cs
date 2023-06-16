@@ -21,7 +21,7 @@ namespace Datos
             List<Productos> productos = new List<Productos>();
 
             var comando = connection.CreateCommand();
-            comando.CommandText = "Select * FROM productos";
+            comando.CommandText = "Select codigo_producto, valor FROM productos";
             Open();
             OracleDataReader lector = comando.ExecuteReader();
             while (lector.Read())
@@ -38,8 +38,7 @@ namespace Datos
 
             Productos productos = new Productos();
             productos.Codigo_producto = oracleDataReader.GetString(0);
-            productos.Nombre_producto = oracleDataReader.GetString(1);
-            productos.Valor = Convert.ToDouble(oracleDataReader.GetString(2));
+            productos.Valor = Convert.ToDouble(oracleDataReader.GetDouble(1));
 
             return productos;
         }
@@ -51,8 +50,7 @@ namespace Datos
                 comando.CommandText = "InsertarProducto";
                 comando.CommandType = CommandType.StoredProcedure;
 
-                comando.Parameters.Add("p_codigoProducto", OracleType.VarChar).Value = productos.Codigo_producto;
-                comando.Parameters.Add("p_nombreProducto", OracleType.VarChar).Value = productos.Nombre_producto;
+                comando.Parameters.Add("p_codigo_producto", OracleType.VarChar).Value = productos.Codigo_producto;
                 comando.Parameters.Add("p_valor", OracleType.Number).Value = productos.Valor;
 
                 Open();

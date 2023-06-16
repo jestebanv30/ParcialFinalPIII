@@ -22,8 +22,9 @@ namespace Lógica
             return ventasRepository.InsertarVentas(ventas);
         }
 
-        public void CargarVentas(string rutaArchivo)
+        public void CargarVentas(string rutaArchivo) //string idSedeDeseada
         {
+            //ventasRepository.CargarVentas(rutaArchivo, idSedeDeseada);
             ventasRepository.CargarVentas(rutaArchivo);
         }
     }

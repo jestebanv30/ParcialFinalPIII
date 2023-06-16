@@ -9,7 +9,6 @@ namespace Entidades
     public class Productos
     {
         public string Codigo_producto { get; set; }
-        public string Nombre_producto { get; set; }
         public double Valor { get; set; }
     }
 }
